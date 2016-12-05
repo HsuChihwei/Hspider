@@ -2,21 +2,22 @@
 
 import urllib2
 import urllib
+import os
 
-def tieba_spider(title,start,end):
+def tieba_spider(name,start,end):
     """
     百度贴吧爬虫核心程序：
-    title：贴吧名称
+    name：贴吧名称
     start：爬取开始页数
     end：爬取结束页数
     """
-    title = {"kw":title}
+    title = {"kw":name}
     title = urllib.urlencode(title)
     for each in range(start,end+1):
         page = (each-1)*50
         url = "http://tieba.baidu.com/f?" + str(title) + "&pn=" + str(page)
         html = load_page(url,each)
-        write_file(html,each)
+        write_file(html,each,name)
     print "all already done!"
 
 def load_page(url,page):
@@ -32,14 +33,19 @@ def load_page(url,page):
     data = response.read()
     return data
 
-def write_file(html,page):
+def write_file(html,page,name):
     """
     保存爬取文件：
     html：爬取的源码内容
     page：爬取的页码
     """
     print "start save the " + str(page) + " page!"
-    filename = "第" + str(page) + "页.html"
+    name ="./" + name
+    if os.path.isdir(name):
+        pass
+    else:
+        os.mkdir(name)
+    filename = name + "/第" + str(page) + "页.html"
     file = open(filename,"w")
     file.write(html)
     file.close()
