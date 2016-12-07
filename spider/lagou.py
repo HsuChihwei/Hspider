@@ -9,24 +9,21 @@ class Spider(object):
     """
     拉勾爬虫类
     """
-    def __init__(self,job, city, start_page=1, pages=10):
+    def __init__(self):
         """
         参数初始化：
-        job：爬取的岗位
-        city：爬去的地区
-        start_page：开始爬取页（默认从第1页开始）
-        pages: 爬取页数（默认爬取10页）
         """
-        self.job = job
-        self.city = city
-        if not start_page:
+        self.url = "https://www.lagou.com/jobs/positionAjax.json?"
+        self.job = raw_input("请输入想要查找的岗位:")
+        self.city = raw_input("请输入想删选的城市:")
+        self.start = raw_input("请输入开始爬取的页码:")
+        self.pages = raw_input("请输入想爬取的总页数:")
+        if not self.city:
+            self.city = '全国'
+        if not self.start:
             self.start = 1
-        else:
-            self.start = int(start_page)
-        if not pages:
+        if not self.pages:
             self.pages = 10
-        else:
-            self.pages = int(pages)
 
     def lagou_spider(self):
         """
@@ -35,9 +32,9 @@ class Spider(object):
         url_data = {"city":self.city}
         job = {"kd":self.job}
         url_data = urllib.urlencode(url_data)
-        url = "https://www.lagou.com/jobs/positionAjax.json?" + url_data + "&needAddtionalResult=false"
+        url = self.url + url_data + "&needAddtionalResult=false"
         job = urllib.urlencode(job)
-        for page in range(self.start, self.start + self.pages):
+        for page in range(int(self.start), int(self.start) + int(self.pages)):
             data = "first=true&pn=" + str(page) + "&" + job
             print "正在下载第" + str(page) + "页！"
             time.sleep(2)
@@ -81,11 +78,7 @@ def main():
     """
     爬虫主程序
     """
-    job = raw_input("请输入想要查找的岗位:")
-    city = raw_input("请输入想删选的城市:")
-    start_page = raw_input("请输入开始爬取的页码:")
-    pages = raw_input("请输入想爬取的总页数:")
-    spider = Spider(job,city,start_page,pages)
+    spider = Spider()
     spider.lagou_spider()
 
 if __name__ == "__main__":
