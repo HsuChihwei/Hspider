@@ -37,3 +37,12 @@ first=true&pn=1&kd=Python
  &gx=全职
  &city=北京
  &district=朝阳区
+
+
+图片xpath：
+//@photo
+//*[@id="gallery-item-takeover"]/div/div/div/@photo
+
+网址链接：
+//div[@class="quark-inner"]/a/@href
+//*[@id="quarks"]/div/div/div/a/@href
