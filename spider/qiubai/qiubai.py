@@ -3,17 +3,25 @@
 import requests
 import json
 import os
+import logging
 from lxml import etree
+
+# logging 配置
+logging.basicConfig(level=logging.DEBUG,
+                format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
+                datefmt='%a, %d %b %Y %H:%M:%S',
+                filename='qiubai.log',
+                filemode='a')
 
 class Qiubai_spider(object):
     """
     糗百爬虫类
     """
-    def __init__(self,):
+    def __init__(self):
         """
         参数初始化:
         """
-        # http://www.qiushibaike.com/8hr/page/3/  热门
+        # http://www.qiushibaike.com/8hr/page/3/  热门 （以此为例）
         # http://www.qiushibaike.com/hot/page/5/  24小时
         # http://www.qiushibaike.com/imgrank/page/5/ 热图
         # http://www.qiushibaike.com/text/page/5/  文字
@@ -26,19 +34,27 @@ class Qiubai_spider(object):
     def run(self):
         """
         糗百爬虫核心程序：
-
         """
         for page in range(self.start,self.start + self.pages):
             url = self.url + str(page) + "/"
             print "正在爬取第" + str(page) + "页！"
-            req = self.load_page(url)
+            try:
+                req = self.load_page(url)
+            except Exception as e:
+                logging.error(e)
             print "正在清洗第" + str(page) + "页！"
-            data = self.clean_data(req.text)
+            try:
+                data = self.clean_data(req.text)
+            except Exception as e:
+                logging.error(e)
             if len(data) < 100:
                 print "所有符合条件页面均爬取完毕～，共爬取" + str(page-1) + "页！"
                 break
             print "正在保存第" + str(page) + "页！"
-            self.write_page(data, page)
+            try:
+                self.write_page(data, page)
+            except Exception as e:
+                logging.error(e)
         print "已爬取完毕！"
 
     def load_page(self,url):
